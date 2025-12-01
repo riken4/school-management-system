@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Student Management System{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if user.is_authenticated %}
+        <div class="dashboard-container">
+            <div class="dashboard-card">
+                <h2 class="dashboard-title">Dashboard</h2>
+                <p class="dashboard-subtitle">Welcome to your {{ user.get_user_type_display }} dashboard!</p>
+
+                <!-- Teachers -->
+                <h3>Teachers</h3>
+                <ul>
+                    {% for teacher in teachers %}
+                        <li>
+                            <strong>{{ teacher.name }}</strong> - {{ teacher.email }} - {{ teacher.address }} - {{ teacher.subject }}
+                        </li>
+                    {% empty %}
+                        <li>No teachers available.</li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Classes -->
+                <h3>Classes</h3>
+                <ul>
+                    {% for cls in classes %}
+                        <li>
+                            <strong>{{ cls.class_name }} {{ cls.section }}</strong> - 
+                            Teacher: 
+                            {% if cls.teacher %}
+                                {{ cls.teacher.name }}
+                            {% else %}
+                                No teacher assigned
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>No classes available.</li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Students -->
+                <h3>Students</h3>
+                <ul>
+                    {% for student in students %}
+                        <li>
+                            <strong>{{ student.name }}</strong> - {{ student.email }} - Roll: {{ student.roll_number }} - Address: {{ student.address }} - DOB: {{ student.dob }} - Class: {{ student.class_name.class_name }}
+                        </li>
+                    {% empty %}
+                        <li>No students available.</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+    {% else %}
+        <div class="welcome-section">
+            <h2 class="welcome-title">Welcome to Student Management System</h2>
+            <p class="welcome-text">Please login or sign up to continue</p>
+            <div class="welcome-buttons">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-large">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-success btn-large">Sign Up</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

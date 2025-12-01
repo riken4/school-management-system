@@ -1,0 +1,2 @@
+a = Auther.object.get(name=email)
+book.object.creaet(name=name, author=auther)
