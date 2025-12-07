@@ -23,9 +23,8 @@ def home(request):
 
 def signup_view(request): 
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            print('yes')
             user = form.save()
             return redirect('login')
         else:
@@ -119,6 +118,6 @@ def add_student(request):
             print('yes')
             form.save()
             return redirect('dashboard') 
-    else:
+    else: 
         form = Add_Student()
     return render(request, 'add_student.html', {'form': form})

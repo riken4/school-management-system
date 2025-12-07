@@ -11,7 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'user_type', 'password1', 'password2','name','address')
+        fields = ('username', 'email', 'user_type', 'password1', 'password2','name','address','image')
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -25,8 +25,7 @@ class workerform(forms.ModelChoiceField):
     class meta:
         model=worker
         fields= '__all__'
-from django import forms
-from .models import Student
+
 
 class Add_Student(forms.ModelForm):
     class Meta:

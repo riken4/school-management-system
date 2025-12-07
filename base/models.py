@@ -16,6 +16,8 @@ class CustomUser(AbstractUser):
     # class_name = models.ForeignKey(School_Class, on_delete=models.CASCADE)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
     email = models.EmailField(unique=True)
+    image = models.ImageField(upload_to='user_image/', blank=True, null=True)
+
     
     
 

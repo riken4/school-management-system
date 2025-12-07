@@ -5,61 +5,61 @@
 
 {% block extra_css %}
 <style>
-/* ---------- COMMON STYLES ---------- */
-.dashboard-container {
-    margin: 20px;
-    padding: 20px;
-}
+    /* ---------- COMMON STYLES ---------- */
+    .dashboard-container {
+        margin: 20px;
+        padding: 20px;
+    }
 
-/* ---------- GRID WRAPPER ---------- */
-.grid-box {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-}
+    /* ---------- GRID WRAPPER ---------- */
+    .grid-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
 
-/* ---------- CARD STYLE ---------- */
-.card {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+    /* ---------- CARD STYLE ---------- */
+    .card {
+        background: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-/* ---------- TABLE STYLE ---------- */
-.table-wrapper {
-    margin-top: 20px;
-    overflow-x: auto;
-}
+    /* ---------- TABLE STYLE ---------- */
+    .table-wrapper {
+        margin-top: 20px;
+        overflow-x: auto;
+    }
 
-.custom-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-.custom-table th,
-.custom-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-}
+    .custom-table th,
+    .custom-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
 
-.custom-table th {
-    background: #007bff;
-    color: white;
-    text-align: left;
-}
+    .custom-table th {
+        background: #007bff;
+        color: white;
+        text-align: left;
+    }
 
-.custom-table tr:nth-child(even) {
-    background: #f2f2f2;
-}
+    .custom-table tr:nth-child(even) {
+        background: #f2f2f2;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-container">
 
-{% if user.is_student %}
+    {% if user.is_student %}
     <h1>Student Dashboard</h1>
 
     <div class="grid-box">
@@ -69,22 +69,27 @@
         <div class="card"><strong>Roll No:</strong> {{ user.roll_number }}</div>
         <div class="card"><strong>Address:</strong> {{ user.address }}</div>
         <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
+        <img src="{{ user.image.url }}" style="width: 150px; height: 150px;">
+
     </div>
 
-{% elif user.is_teacher %}
+    {% elif user.is_teacher %}
     <h1>{{hero.title}}</h1>
     {{hero.description }}
 
     <div class="grid-box">
-<a href="{% url 'school_class' user.id %}">
-    <div class="card"><strong>Username:</strong> {{ user.username }}</div>
-</a>        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
+        <a href="{% url 'school_class' user.id %}">
+            <div class="card"><strong>Username:</strong> {{ user.username }}</div>
+        </a>
+        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
         <div class="card"><strong>Address:</strong> {{ user.address }}</div>
         <div class="card"><strong>Email:</strong> {{ user.email }}</div>
         <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
+        <img src="{{ user.image.url }}" style="width: 150px; height: 150px;">
+
     </div>
 
-{% elif user.is_admin %}
+    {% elif user.is_admin %}
     <h1>Admin Dashboard</h1>
 
     <h2>Students</h2>
@@ -92,26 +97,35 @@
         <table class="custom-table">
             <thead>
                 <tr>
+                    <th>profile picture</th>
                     <th>Username</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Roll</th>
+                    <th>Roll Number</th>
                     <th>Address</th>
+                    <th>Email</th>
+                    <th>User Type</th>
                     <th>Enroll Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for student in students %}
                 <tr>
+                    <td>{% if student.image %}
+                        <img src="{{ student.image.url }}" style="width: 100px; height: 100px;">
+                        {% endif %}
+                    </td>
                     <td>{{ student.username }}</td>
                     <td>{{ student.name }}</td>
-                    <td>{{ student.email }}</td>
                     <td>{{ student.roll_number }}</td>
-                    <td>{{ student.address }}</td>
+                      <td>{{ student.address }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.user_type }}</td>
                     <td>{{ student.enrollment_date }}</td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="6">No students found.</td></tr>
+                <tr>
+                    <td colspan="6">No students found.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -123,20 +137,27 @@
         <table class="custom-table">
             <thead>
                 <tr>
+                   <th>profile picture</th>
                     <th>Username</th>
                     <th>Name</th>
                     <th>Address</th>
                     <th>Email</th>
+                    <th>User Type</th>
                     <th>Enroll Date</th>
                 </tr>
             </thead>
             <tbody>
                 {% for teacher in teachers %}
                 <tr>
+                    <td>{% if teacher.image %}
+                        <img src="{{ teacher.image.url }}" style="width: 100px; height: 100px;">
+                        {% endif %}
+                    </td>
                     <td>{{ teacher.username }}</td>
                     <td>{{ teacher.name }}</td>
                     <td>{{ teacher.address }}</td>
                     <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.user_type }}</td>
                     <td>{{ teacher.enrollment_date }}</td>
                 </tr>
                 {% endfor %}
@@ -144,7 +165,7 @@
         </table>
     </div>
 
-{% elif user.user_type == 'staff' %}
+    {% elif user.user_type == 'staff' %}
     <h1>Staff Dashboard</h1>
 
     <div class="table-wrapper">
@@ -176,9 +197,9 @@
         </table>
     </div>
 
-{% else %}
+    {% else %}
     <p>No dashboard available.</p>
-{% endif %}
+    {% endif %}
 
 </div>
 {% endblock %}
