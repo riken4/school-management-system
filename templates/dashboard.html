@@ -4,81 +4,185 @@
 {% block title %}Event Detail{% endblock %}
 
 {% block extra_css %}
+<style>
+/* ---------- COMMON STYLES ---------- */
+.dashboard-container {
+    margin: 20px;
+    padding: 20px;
+}
+
+/* ---------- GRID WRAPPER ---------- */
+.grid-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* ---------- CARD STYLE ---------- */
+.card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* ---------- TABLE STYLE ---------- */
+.table-wrapper {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.custom-table th {
+    background: #007bff;
+    color: white;
+    text-align: left;
+}
+
+.custom-table tr:nth-child(even) {
+    background: #f2f2f2;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-{% if user.is_student %}
-<h1>Student Dashboard</h1>
-<ul>
-    <li>{{user.username}} </li>
-    <li>{{user.name}}</li>
-    <li>{{user.email}}</li>
-    <li>{{user.roll_number}}</li>
-    <li>{{user.address}}</li>
-    <li>{{user.enrollment_date}}</li>
-</ul>
+<div class="dashboard-container">
 
+{% if user.is_student %}
+    <h1>Student Dashboard</h1>
+
+    <div class="grid-box">
+        <div class="card"><strong>Username:</strong> {{ user.username }}</div>
+        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
+        <div class="card"><strong>Email:</strong> {{ user.email }}</div>
+        <div class="card"><strong>Roll No:</strong> {{ user.roll_number }}</div>
+        <div class="card"><strong>Address:</strong> {{ user.address }}</div>
+        <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
+    </div>
 
 {% elif user.is_teacher %}
-<h1>Teacher Dashboard</h1>
-<ul>
+    <h1>{{hero.title}}</h1>
+    {{hero.description }}
 
-    <li>{{user.username}}</li>
-    <li>{{user.name}}</li>
-    <li>{{user.address}}</li>
-    <li>{{user.email}}</li>
-    <li>{{user.enrollment_date}}</li>
-</ul>
+    <div class="grid-box">
+<a href="{% url 'school_class' user.id %}">
+    <div class="card"><strong>Username:</strong> {{ user.username }}</div>
+</a>        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
+        <div class="card"><strong>Address:</strong> {{ user.address }}</div>
+        <div class="card"><strong>Email:</strong> {{ user.email }}</div>
+        <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
+    </div>
 
 {% elif user.is_admin %}
-<h1>Admin Dashboard</h1>
-<h2>Student Dashboard</h2>
-<ul>
-   {% for student in students %}
-    <li>{{ student.username }}</li>
-    <li>{{ student.name }}</li>
-    <li>{{ student.email }}</li>
-    <li>{{ student.roll_number }}</li>
-    <li>{{ student.address }}</li>
-    <li>{{ student.enrollment_date }}</li>
-    <hr> <!-- Add separator between students -->
-    {% empty %}
-    <li>No students found.</li>
-    {% endfor %}
-</ul>
-<h2>Teacher Dashboard</h2>
-<ul>
+    <h1>Admin Dashboard</h1>
 
-    <li>{{user.username}}</li>
-    <li>{{user.name}}</li>
-    <li>{{user.address}}</li>
-    <li>{{user.email}}</li>
-    <li>{{user.enrollment_date}}</li>
-</ul>
+    <h2>Students</h2>
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roll</th>
+                    <th>Address</th>
+                    <th>Enroll Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.username }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.roll_number }}</td>
+                    <td>{{ student.address }}</td>
+                    <td>{{ student.enrollment_date }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">No students found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>{{hero}}</h2>
+
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Enroll Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.username }}</td>
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ teacher.address }}</td>
+                    <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.enrollment_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% elif user.user_type == 'staff' %}
-<h1>Staff Dashboard</h1>
-{% for student in students %}
-<li>{{ student.name }} </li>
-<li>{{student.email}}</li>
-<li>{{student.roll_number}}</li>
-<li>{{student.address}}</li>
-<li>{{student.dob}}</li>
-<li>{{student.enrollment_date}}</li>
-<li>{{student.class_name}}</li>
-{% endfor %}
-<ul>
-    <li>Welcome, Staff! You can manage administrative tasks here.</li>
-</ul>
+    <h1>Staff Dashboard</h1>
+
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Roll</th>
+                    <th>Address</th>
+                    <th>DOB</th>
+                    <th>Enroll Date</th>
+                    <th>Class</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.roll_number }}</td>
+                    <td>{{ student.address }}</td>
+                    <td>{{ student.dob }}</td>
+                    <td>{{ student.enrollment_date }}</td>
+                    <td>{{ student.class_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% else %}
-{{current_user}}
-<p>No dashboard available for your user type.</p>
+    <p>No dashboard available.</p>
 {% endif %}
 
+</div>
 {% endblock %}
+
 {% block extra_js %}
-<script>
-
-</script>
-
+<script></script>
 {% endblock %}

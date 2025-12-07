@@ -1,88 +1,10 @@
-# from django.shortcuts import render, redirect
-# from django.contrib.auth import login, authenticate, logout
-# from django.contrib import messages
-# from .forms import CustomUserCreationForm
-# from .models import Teacher, Student, School_Class
-
-
-# def home(request):
-#     return render(request, 'home.html')
-
-
-# def signup_view(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             return redirect('login')
-#         else:
-#             for field, errors in form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f'{field}: {error}')
-#     else:
-#         form = CustomUserCreationForm()
-    
-#     return render(request, 'signup.html', {'form': form})
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-        
-#         user = authenticate(request, username=username, password=password)
-        
-#         if user is not None:
-#             login(request, user)
-#             messages.success(request, f'Welcome back, {user.username}!')
-#             if user.is_admin:
-#                 return redirect('admin_dashboard')
-
-#             elif user.is_teacher:
-#                 return redirect('teacher_dashboard')
-
-#             elif user.is_student:
-#                 return redirect('student_dashboard')
-
-#             elif user.is_staff_member:
-#                 return redirect('staff_dashboard')
-
-#         else:
-#             messages.error(request, 'Invalid username or password!')
-    
-#     return render(request, 'login.html')
-
-# def logout_view(request):
-#     logout(request)
-#     messages.success(request, 'You have been logged out successfully!')
-#     return redirect('login') 
-
-# def admin_dashboard(request):
-#     return render(request, 'admin/admin_dashboard.html')
-
-# def teacher_dashboard(request, teacher_id):
-#     teachers = Teacher.objects.all() 
-#     return render(request, 'teacher/teacher_dashboard.html', {'teachers': teachers})
-
-# def teacher_detail(request):
-#     return render(request, 'teacher/teacher_detail.html')
-
-# def student_dashboard(request):
-#     students = Student.objects.all()
-#     return render(request, 'student/student_dashboard.html',{'students': students})
-
-# def staff_dashboard(request):
-#     return render(request, 'staff/staff_dashboard.html')
-
-# def school_class(request):
-#     school_class = School_Class.objects.all() 
-#     return render(request, 'school_class.html', {'school_class': school_class})
-
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from .forms import CustomUserCreationForm
-from .models import CustomUser, School_Class
+from .forms import CustomUserCreationForm, Add_Student
+from .models import CustomUser, School_Class, herosection
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 
 
@@ -103,6 +25,7 @@ def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
+            print('yes')
             user = form.save()
             return redirect('login')
         else:
@@ -153,29 +76,49 @@ def dashboard(request):
     user = request.user
 
     students = CustomUser.objects.filter(user_type='student')
-
+    teachers = CustomUser.objects.filter(user_type='teacher')
+    hero = herosection.objects.get(is_active=True)
     print("Current User:", user)
 
     return render(request, 'dashboard.html', {
         'user': user,
         'students': students,
+        'teachers': teachers,
+        'hero': hero,
     })
 
 
-def admin_dashboard(request):
-    return render(request, 'admin/admin_dashboard.html')
 
+def school_class(request, teacher_id):
+    user = get_object_or_404(user, id=teacher_id)
+    return render(request, 'school_class.html', {'user': user})
+# def school_class(request):
+    # T=School_Class.objects.get(class_name='class 2')
+    # print(T)
+    # school_classes = School_Class.objects.get(teacher__id=id)
+    # school_classes = School_Class.objects.filter(teacher__id=id)
+    # section = School_Class.objects.filter(teacher__id=id)
+    teacher = CustomUser.objects.get(id=id)
+    classes = School_Class.objects.filter(teacher=teacher)
+    return render(request, 'school_class.html', {
+        'teacher': teacher,
+        'classes': classes
+    })
+    
+    # school_classes = School_Class.objects.get(id=id)
+    return render(request, school_class.html)
+        # 'school_classes': school_classes,
 
+        # 'school_classes': teacher})
 
-def teacher_detail(request):
-    return render(request, 'teacher/teacher_detail.html')
+def add_student(request):
+    if request.method == 'POST':
+        form = Add_Student(request.POST, request.FILES)
 
-
-
-def staff_dashboard(request):
-    return render(request, 'staff/staff_dashboard.html')
-
-
-def school_class(request):
-    school_class = School_Class.objects.all() 
-    return render(request, 'school_class.html', {'school_classes': school_class})
+        if form.is_valid():
+            print('yes')
+            form.save()
+            return redirect('dashboard') 
+    else:
+        form = Add_Student()
+    return render(request, 'add_student.html', {'form': form})

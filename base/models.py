@@ -50,7 +50,27 @@ class School_Class(models.Model):
     def __str__(self):
         return self.class_name
     
-    def unique_together(self):
-        return (('class_name', 'section'),)
+    # def unique_together(self):
+    #     return (('class_name', 'section'),)
 
 
+class worker(models.Model):
+    name = models.CharField(max_length=50)
+
+
+class herosection(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    is_active = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+class Student(models.Model):
+    name = models.CharField(max_length=100)
+    roll_number = models.CharField(max_length=20, unique=True)
+    student_class = models.CharField(max_length=50)
+    section = models.CharField(max_length=10)
+    image = models.ImageField(upload_to='stu_image/', blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.roll_number}"

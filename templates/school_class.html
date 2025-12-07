@@ -7,18 +7,16 @@
 {% endblock %}
 
 {% block content %}
-<h1>Teacher Dashboard</h1>
 <ul>
-  {% for school_class in school_classes %}
-    <li>{{ school_class.class_name }} - 
-      {{ school_class.section }}
-     <li>
-    <a href="{% url 'teacher_dashboard' school_class.teacher.id %}">
-        {{ school_class.teacher.name }}
-    </a>
-</li>
 
-  {% endfor %}
+{{ school_classes }}
+
+{{school_classes.class_name}}
+{{school_classes.section}}
+
+
+ 
+
 </ul>
 
 {% endblock %}
