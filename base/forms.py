@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, worker, Student
+from .models import CustomUser, worker, Student, School_Class
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -26,8 +26,21 @@ class workerform(forms.ModelChoiceField):
         model=worker
         fields= '__all__'
 
+class SchoolClassForm(forms.ModelForm):
+    class Meta:
+        model = School_Class
+        fields = ['class_name', 'section', 'teacher', 'student']
+        widgets = {
+            'student': forms.CheckboxSelectMultiple,  
+        }
 
+        
 class Add_Student(forms.ModelForm):
     class Meta:
-        model = Student
-        fields = ['name', 'roll_number', 'student_class', 'section', 'image']
+        model = CustomUser
+        fields = ['name', 'roll_number', 'address', 'image']
+
+class Stu_class(forms.ModelForm):
+    class Meta:
+        model = School_Class
+        fields = ['class_name', 'section', 'teacher']

@@ -1,0 +1,27 @@
+<h1>School Classes</h1>
+<a href="{% url 'class_create' %}">Add New Class</a>
+<table border="1">
+    <tr>
+        <th>Class Name</th>
+        <th>Section</th>
+        <th>Teacher</th>
+        <th>Students</th>
+        <th>Actions</th>
+    </tr>
+    {% for class in classes %}
+    <tr>
+        <td>{{ class.class_name }}</td>
+        <td>{{ class.section }}</td>
+        <td>{{ class.teacher.name }}</td>
+        <td>
+            {% for student in class.student.all %}
+                {{ student.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>
+            <a href="{% url 'class_update' class.pk %}">Edit</a> |
+            <a href="{% url 'class_delete' class.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>

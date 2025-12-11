@@ -1,0 +1,18 @@
+<h1>Student Class Details</h1>
+
+<p><strong>Name:</strong> {{ student.name }}</p>
+<p><strong>Username:</strong> {{ student.username }}</p>
+
+<h2>Your Class(es)</h2>
+
+{% if classes %}
+    {% for class_item in classes %}
+        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
+            <p><strong>Class:</strong> {{ class_item.class_name }}</p>
+            <p><strong>Section:</strong> {{ class_item.section }}</p>
+            <p><strong>Teacher:</strong> {{ class_item.teacher.name }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You are not assigned to any class.</p>
+{% endif %}

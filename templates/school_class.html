@@ -4,24 +4,79 @@
 {% block title %}Event Detail{% endblock %}
 
 {% block extra_css %}
+<style>
+    .class-table {
+        width: 80%;
+        margin: 30px auto;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        background: #ffffff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .class-table thead {
+        background: #4f46e5;
+        /* Indigo color */
+        color: white;
+    }
+
+    .class-table th,
+    .class-table td {
+        padding: 12px 18px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .class-table tbody tr:hover {
+        background: #f3f4f6;
+        /* Light hover */
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 26px;
+        color: #1f2937;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<ul>
+<table class="class-table">
+    <thead>
+        <tr>
+            <th>Class</th>
+            <th>Section</th>
+            <th>Teacher</th>
+            <th>All students</th>
+        </tr>
+    </thead>
+    <tbody>
 
-{{ school_classes }}
+        <tr>
+            <td>{{ classes.class_name }}</td>
+            <td>{{ classes.section }}</td>
+            <td>{{ teacher.name }}</td>
+            {% for student in students %}
+            <td> {% for student in students %}
+                {{ student.name }},
+                {% endfor %}</td>
+            {% endfor %}
+        </tr>
 
-{{school_classes.class_name}}
-{{school_classes.section}}
+            <!-- <tr>
+                <td colspan="3">No classes assigned to this teacher.</td>
+            </tr> -->
 
+    </tbody>
+</table>
 
- 
-
-</ul>
 
 {% endblock %}
+
 {% block extra_js %}
-<script>
-   
-</script>
+<script></script>
 {% endblock %}
