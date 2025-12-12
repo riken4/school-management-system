@@ -278,20 +278,20 @@
     <!-- Classes Section -->
    {% if classes %}
 <div class="classes-section">
-    <h3>📚 Enrolled Classes</h3>
+    <h3>Classes</h3>
     <div class="classes-list">
-        {% for class in classes %}
-        <div class="class-badge">
-            <div>{{ class.class_name }}</div>
-            <small>Section: {{ class.section }}</small>
-            <div>Teacher: {{ class.teacher.name }}</div>
-        </div>
-        {% endfor %}
+  {% for class in classes %}
+<div class="class-badge">
+    <div>{{ class.class_name }}</div>
+    <small>Section: {{ class.section }}</small>
+    <div>Teacher: {{ class.teacher.username }}</div>
+</div>
+{% endfor %}
     </div>
 </div>
 {% else %}
 <div class="classes-section">
-    <h3>📚 Enrolled Classes</h3>
+    <h3>📚 Classes</h3>
     <div class="empty-classes">
         <p>This teacher is not assigned to any classes yet.</p>
     </div>

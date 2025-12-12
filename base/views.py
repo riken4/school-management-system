@@ -10,15 +10,7 @@ from django.contrib.auth.models import User
 
 def home(request):
     context = {}
-    # if request.user.is_authenticated:
-    #     teachers = Teacher.objects.all()
-    #     classes = School_Class.objects.all()
-    #     students = Student.objects.all()
-    #     context = {
-    #         'teachers': teachers,
-    #         'classes': classes,
-    #         'students': students
-    #     }
+
     return render(request, 'home.html')
 
 def signup_view(request): 
@@ -76,6 +68,7 @@ def dashboard(request):
 
     students = CustomUser.objects.filter(user_type='student')
     teachers = CustomUser.objects.filter(user_type='teacher')
+    classes = School_Class.objects.filter()
     hero = herosection.objects.get(is_active=True)
     print("Current User:", user)
 
@@ -84,6 +77,7 @@ def dashboard(request):
         'students': students,
         'teachers': teachers,
         'hero': hero,
+        'classes': classes,
     })
 
 def school_class(request, id):
@@ -159,7 +153,7 @@ def teacher_list(request):
 
 def teacher_detail(request, id):
     teacher = get_object_or_404(CustomUser, id=id, user_type='teacher')
-    classes = teacher.classes.all()
+    classes = School_Class.objects.filter(teacher=teacher)
     
     return render(request, 'teacher_detail.html', {
         'teacher': teacher,
@@ -188,8 +182,8 @@ def teacher_delete(request, id):
 
 
 
-def student_class_detail(request, student_id):
-    student = CustomUser.objects.get(id=student_id, user_type='student')
+def student_class_detail(request, id):
+    student = CustomUser.objects.get(id=id, user_type='student')
     classes = student.classes.all()  
     return render(request, "student_class_detail.html", {
         "student": student,

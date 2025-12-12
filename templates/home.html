@@ -4,18 +4,7 @@
 
 {% block content %}
 <div class="container">
-    {% if user.is_authenticated %}
-        <div class="dashboard-container">
-            <div class="dashboard-card">
-                <h2 class="dashboard-title">Dashboard</h2>
-                <p class="dashboard-subtitle">Welcome to your {{ user.get_user_type_display }} dashboard!</p>
-
-              
-
-                
-            </div>
-        </div>
-    {% else %}
+ 
         <div class="welcome-section">
             <h2 class="welcome-title">Welcome to Student Management System</h2>
             <p class="welcome-text">Please login or sign up to continue</p>
@@ -24,6 +13,6 @@
                 <a href="{% url 'signup' %}" class="btn btn-success btn-large">Sign Up</a>
             </div>
         </div>
-    {% endif %}
+
 </div>
 {% endblock %}

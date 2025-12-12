@@ -157,23 +157,27 @@
 
 
     {% elif user.is_admin %}
-    <h1>Admin Dashboard</h1>
-<a href="{% url 'student_list' %}">student</a>
+    <h1>Admin Dashboard</h1><div class="container">
+    
+    <div class="header">
+        <h1>👨‍🎓 Student List</h1>
+        <a href="{% url 'add_student' %}" class="btn btn-success">
+            ➕ Add Student
+        </a>
+    </div>
 
-<!-- Students Table -->
-    <h2>Students</h2>
-    <div class="table-wrapper">
+    {% if students %}
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>Profile</th>
-                    <th>Username</th>
+                    <th>Photo</th>
                     <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
                     <th>Roll Number</th>
                     <th>Address</th>
-                    <th>Email</th>
-                    <th>User Type</th>
-                    <th>Enroll Date</th>
+                    <th>Enrollment Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -181,65 +185,130 @@
                 <tr>
                     <td>
                         {% if student.image %}
-                        <img src="{{ student.image.url }}" class="table-img">
+                            <img src="{{ student.image.url }}" class="table-img" alt="Student Photo">
+                        {% else %}
+                            <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
+                                👨
+                            </div>
                         {% endif %}
                     </td>
+                    <td><strong>{{ student.name }}</strong></td>
                     <td>{{ student.username }}</td>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.roll_number }}</td>
-                    <td>{{ student.address }}</td>
                     <td>{{ student.email }}</td>
-                    <td>{{ student.user_type }}</td>
-                    <td>{{ student.enrollment_date }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="8">No students found.</td>
+                    <td>{{ student.roll_number|default:"N/A" }}</td>
+                    <td>{{ student.address }}</td>
+                    <td>{{ student.enrollment_date|date:"d M, Y" }}</td>
+                    <td>
+                        <a href="{% url 'student_detail' student.id %}" class="btn btn-primary">View</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="table-wrapper">
+        <div class="empty-state">
+            <p>📭 No students found in the system.</p>
+            <a href="{% url 'add_student' %}" class="btn btn-success">Add your first student</a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+    
 
     <!-- Teachers Table -->
     <h2>Teachers</h2>
-<a href="{% url 'add_teacher' %}">teacher</a>
+<div class="container">
+    
+    <div class="header">
+        <h1>👨‍🎓 Student List</h1>
+        <a href="{% url 'add_teacher' %}" class="btn btn-success">
+            ➕ Add Student
+        </a>
+    </div>
 
+    {% if teachers %}
     <div class="table-wrapper">
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>Profile</th>
-                    <th>Username</th>
+                    <th>Photo</th>
                     <th>Name</th>
-                    <th>Address</th>
+                    <th>Username</th>
                     <th>Email</th>
-                    <th>User Type</th>
-                    <th>Enroll Date</th>
+                    <th>Roll Number</th>
+                    <th>Address</th>
+                    <th>Enrollment Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for teacher in teachers %}
+                {% for t in teachers %}
                 <tr>
                     <td>
-                        {% if teacher.image %}
-                        <img src="{{ teacher.image.url }}" class="table-img">
+                        {% if t.image %}
+                            <img src="{{ t.image.url }}" class="table-img" alt="Student Photo">
+                        {% else %}
+                            <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
+                                👨
+                            </div>
                         {% endif %}
                     </td>
-               
-                    <td>{{ teacher.username }}</td></a>  
-                    <td>{{ teacher.name }}</td>
-                    <td>{{ teacher.address }}</td>
-                    <td>{{ teacher.email }}</td>
-                    <td>{{ teacher.user_type }}</td>
-                    <td>{{ teacher.enrollment_date }}</td>
+                    <td><strong>{{ t.name }}</strong></td>
+                    <td>{{ t.username }}</td>
+                    <td>{{ t.email }}</td>
+                    <td>{{ t.roll_number|default:"N/A" }}</td>
+                    <td>{{ t.address }}</td>
+                    <td>{{ t.enrollment_date|date:"d M, Y" }}</td>
+                    <td>
+                        <a href="{% url 'teacher_detail' t.id %}" class="btn btn-primary">View</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    {% else %}
+    <div class="table-wrapper">
+        <div class="empty-state">
+            <p>📭 No students found in the system.</p>
+            <a href="{% url 'add_student' %}" class="btn btn-success">Add your first student</a>
+        </div>
+    </div>
+    {% endif %}
 
-
+</div>
+{% if teachers %}
+<h1>School Classes</h1>
+<a href="{% url 'class_create' %}">Add New Class</a>
+<table border="1">
+    <tr>
+        <th>Class Name</th>
+        <th>Section</th>
+        <th>Teacher</th>
+        <th>Students</th>
+        <th>Actions</th>
+    </tr>
+    {% for class in classes %}
+    <tr>
+        <td>{{ class.class_name }}</td>
+        <td>{{ class.section }}</td>
+        <td>{{ class.teacher.name }}</td>
+        <td>
+            {% for student in class.student.all %}
+                {{ student.name }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>
+            <a href="{% url 'class_update' class.pk %}">Edit</a> |
+            <a href="{% url 'class_delete' class.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+    {% endif %}
+</table>
     {% elif user.user_type == 'staff' %}
     <h1>Staff Dashboard</h1>
 
