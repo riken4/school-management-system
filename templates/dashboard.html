@@ -1,31 +1,33 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Event Detail{% endblock %}
 {% block extra_css %}
 <style>
+    /* ---------- Body & Container ---------- */
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f5f7fa;
+        color: #333;
+    }
 
-    /* ---------- Page Layout ---------- */
     .dashboard-container {
-        margin: 20px;
-        padding: 10px 5px;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 15px;
     }
 
-    /* ---------- Grid Cards ---------- */
-    .grid-box {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 15px;
-        margin-top: 20px;
+    /* ---------- Headings ---------- */
+    h1,
+    h2 {
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.6s ease;
     }
 
-    .card {
-        background: #ffffff;
-        padding: 18px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        font-size: 15px;
-        border: 1px solid #f1f1f1;
+    h1.show,
+    h2.show {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* ---------- Table Wrapper ---------- */
@@ -35,69 +37,122 @@
         background: #ffffff;
         padding: 25px;
         border-radius: 14px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.7s ease;
+    }
+
+    .table-wrapper.show {
+        opacity: 1;
+        transform: translateY(0);
     }
 
     /* ---------- Modern Table ---------- */
-    .custom-table {
+    .custom-table,
+    .class-table {
         width: 100%;
         border-collapse: separate;
-        border-spacing: 0 8px; /* gap between rows */
+        border-spacing: 0 8px;
+        /* gap between rows */
         font-family: Arial, sans-serif;
         font-size: 15px;
     }
 
-    /* Header */
-    .custom-table thead th {
-        background: #4F46E5; /* Indigo-600 */
+    .custom-table thead th,
+    .class-table thead th {
+        background: #4F46E5;
+        /* Indigo */
         color: white;
-        padding: 14px 18px;
+        padding: 12px 18px;
         text-align: left;
         font-weight: bold;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
+        border-radius: 8px;
         font-size: 16px;
     }
 
-    /* Table Row */
-    .custom-table tbody tr {
+    .custom-table tbody tr,
+    .class-table tbody tr {
         background: white;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         border-radius: 10px;
-    }
-
-    .custom-table tbody tr td {
-        padding: 14px 18px;
-        border-bottom: none;
-    }
-
-    /* Hover Effect */
-    .custom-table tbody tr:hover {
-        background: #eef2ff;
         transition: 0.2s ease-in-out;
+    }
+
+    .custom-table tbody tr:hover,
+    .class-table tbody tr:hover {
+        background: #eef2ff;
         transform: scale(1.005);
     }
 
-    /* ---------- Profile Image in Table ---------- */
+    .custom-table tbody td,
+    .class-table tbody td {
+        padding: 12px 18px;
+    }
+
+    /* ---------- Student List Overflow ---------- */
+    .student-list {
+        max-height: 80px;
+        overflow-y: auto;
+    }
+
+    /* ---------- Profile Images ---------- */
     .table-img {
         width: 65px;
         height: 65px;
         border-radius: 10px;
         object-fit: cover;
         border: 2px solid #ddd;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* ---------- Buttons ---------- */
+    a.btn {
+        display: inline-block;
+        padding: 8px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #fff;
+        margin-bottom: 10px;
+        transition: 0.3s;
+    }
+
+    .btn-success {
+        background-color: #1cc88a;
+    }
+
+    .btn-success:hover {
+        background-color: #17a673;
+    }
+
+    .btn-primary {
+        background-color: #4e73df;
+    }
+
+    .btn-primary:hover {
+        background-color: #3b5fd1;
+    }
+
+    .btn-danger {
+        background-color: #e74a3b;
+    }
+
+    .btn-danger:hover {
+        background-color: #c0392b;
     }
 
     /* ---------- Responsive ---------- */
     @media (max-width: 768px) {
-
         .table-wrapper {
             padding: 15px;
         }
 
         .custom-table thead th,
-        .custom-table tbody td {
-            padding: 10px 12px;
+        .custom-table tbody td,
+        .class-table thead th,
+        .class-table tbody td {
+            padding: 8px 10px;
+            font-size: 14px;
         }
 
         .table-img {
@@ -105,68 +160,86 @@
             height: 50px;
         }
     }
-
 </style>
 {% endblock %}
+{%include 'navbar.html' %}
 {% block content %}
 
 <div class="dashboard-container">
-
     {% if user.is_student %}
-    <h1>Student Dashboard</h1>
+    <table class="class-table">
+        <thead>
+            <tr>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roll Number</th>
+                <th>Address</th>
+                <th>Enrollment Date</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    <div class="grid-box">
-
-<a href="{% url 'student_class_detail' user.id %}">
-    <div class="card"><strong>Username:</strong> {{ user.username }}</div>
-</a>
-
-
-
-        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
-        <div class="card"><strong>Email:</strong> {{ user.email }}</div>
-        <div class="card"><strong>Roll No:</strong> {{ user.roll_number }}</div>
-        <div class="card"><strong>Address:</strong> {{ user.address }}</div>
-        <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
-
-        {% if user.image %}
-        <img src="{{ user.image.url }}" class="table-img">
-        {% endif %}
-
-    </div>
-
-
+            <td>
+                {% if user.image %}
+                <img src="{{ user.image.url }}" class="table-img">
+                {% endif %}
+            </td>
+            <td><a href="{% url 'student_class_detail' user.id %}">
+                    <div class="card"> {{ user.name }}</div>
+                </a></td>
+            <td>{{user.username}}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roll_number }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.enrollment_date }}</td>
+        </tbody>
+    </table>
     {% elif user.is_teacher %}
+
     <h1>{{ hero.title }}</h1>
     {{ hero.description }}
+    <table class="class-table">
+        <thead>
+            <tr>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
 
-    <div class="grid-box">
-        <a href="{% url 'school_class' user.id %}">
-            <div class="card"><strong>Username:</strong> {{ user.username }}</div>
-        </a>
+                <th>Address</th>
+                <th>Enrollment Date</th>
+            </tr>
+        </thead>
+        <tbody>
 
-        <div class="card"><strong>Name:</strong> {{ user.name }}</div>
-        <div class="card"><strong>Address:</strong> {{ user.address }}</div>
-        <div class="card"><strong>Email:</strong> {{ user.email }}</div>
-        <div class="card"><strong>Enrollment Date:</strong> {{ user.enrollment_date }}</div>
+            <td>
+                {% if user.image %}
+                <img src="{{ user.image.url }}" class="table-img">
+                {% endif %}
+            </td>
+            <td><a href="{% url 'school_class' user.id %}">
+                    <div class="card"> {{ user.name }}</div>
+                </a></td>
+            <td>{{user.username}}</td>
+            <td>{{ user.email }}</td>
 
-        {% if user.image %}
-        <img src="{{ user.image.url }}" class="table-img">
-        {% endif %}
-    </div>
+            <td>{{ user.address }}</td>
+            <td>{{ user.enrollment_date }}</td>
+        </tbody>
+    </table>
 
+    {% endif %}
+    <!-- Admin Dashboard -->
+    {% if user.is_admin %}
+    <h1>Admin Dashboard</h1>
 
-    {% elif user.is_admin %}
-    <h1>Admin Dashboard</h1><div class="container">
-    
-    <div class="header">
-        <h1>👨‍🎓 Student List</h1>
-        <a href="{% url 'add_student' %}" class="btn btn-success">
-            ➕ Add Student
-        </a>
-    </div>
-
-    {% if students %}
+    <!-- Students Table -->
+    <div class="table-wrapper">
+        <h2>Students</h2>
+        <a href="{% url 'add_student' %}" class="btn btn-success">➕ Add Student</a>
+        {% if students %}
         <table class="custom-table">
             <thead>
                 <tr>
@@ -185,52 +258,34 @@
                 <tr>
                     <td>
                         {% if student.image %}
-                            <img src="{{ student.image.url }}" class="table-img" alt="Student Photo">
+                        <img src="{{ student.image.url }}" class="table-img">
                         {% else %}
-                            <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
-                                👨
-                            </div>
+                        <div
+                            style="width:50px;height:50px;background:#e0e0e0;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            👨</div>
                         {% endif %}
                     </td>
-                    <td><strong>{{ student.name }}</strong></td>
+                    <td>{{ student.name }}</td>
                     <td>{{ student.username }}</td>
                     <td>{{ student.email }}</td>
                     <td>{{ student.roll_number|default:"N/A" }}</td>
                     <td>{{ student.address }}</td>
                     <td>{{ student.enrollment_date|date:"d M, Y" }}</td>
-                    <td>
-                        <a href="{% url 'student_detail' student.id %}" class="btn btn-primary">View</a>
-                    </td>
+                    <td><a href="{% url 'student_detail' student.id %}" class="btn btn-primary">View</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>No students found.</p>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="table-wrapper">
-        <div class="empty-state">
-            <p>📭 No students found in the system.</p>
-            <a href="{% url 'add_student' %}" class="btn btn-success">Add your first student</a>
-        </div>
-    </div>
-    {% endif %}
-
-</div>
-    
 
     <!-- Teachers Table -->
-    <h2>Teachers</h2>
-<div class="container">
-    
-    <div class="header">
-        <h1>👨‍🎓 Student List</h1>
-        <a href="{% url 'add_teacher' %}" class="btn btn-success">
-            ➕ Add Student
-        </a>
-    </div>
-
-    {% if teachers %}
     <div class="table-wrapper">
+        <h2>Teachers</h2>
+        <a href="{% url 'add_teacher' %}" class="btn btn-success">➕ Add Teacher</a>
+        {% if teachers %}
         <table class="custom-table">
             <thead>
                 <tr>
@@ -238,113 +293,102 @@
                     <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Roll Number</th>
                     <th>Address</th>
                     <th>Enrollment Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for t in teachers %}
+                {% for teacher in teachers %}
                 <tr>
                     <td>
-                        {% if t.image %}
-                            <img src="{{ t.image.url }}" class="table-img" alt="Student Photo">
+                        {% if teacher.image %}
+                        <img src="{{ teacher.image.url }}" class="table-img">
                         {% else %}
-                            <div style="width: 50px; height: 50px; background: #e0e0e0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
-                                👨
-                            </div>
+                        <div
+                            style="width:50px;height:50px;background:#e0e0e0;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                            👨</div>
                         {% endif %}
                     </td>
-                    <td><strong>{{ t.name }}</strong></td>
-                    <td>{{ t.username }}</td>
-                    <td>{{ t.email }}</td>
-                    <td>{{ t.roll_number|default:"N/A" }}</td>
-                    <td>{{ t.address }}</td>
-                    <td>{{ t.enrollment_date|date:"d M, Y" }}</td>
-                    <td>
-                        <a href="{% url 'teacher_detail' t.id %}" class="btn btn-primary">View</a>
-                    </td>
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ teacher.username }}</td>
+                    <td>{{ teacher.email }}</td>
+                    <td>{{ teacher.address }}</td>
+                    <td>{{ teacher.enrollment_date|date:"d M, Y" }}</td>
+                    <td><a href="{% url 'teacher_detail' teacher.id %}" class="btn btn-primary">View</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>No teachers found.</p>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="table-wrapper">
-        <div class="empty-state">
-            <p>📭 No students found in the system.</p>
-            <a href="{% url 'add_student' %}" class="btn btn-success">Add your first student</a>
-        </div>
-    </div>
-    {% endif %}
 
-</div>
-{% if teachers %}
-<h1>School Classes</h1>
-<a href="{% url 'class_create' %}">Add New Class</a>
-<table border="1">
-    <tr>
-        <th>Class Name</th>
-        <th>Section</th>
-        <th>Teacher</th>
-        <th>Students</th>
-        <th>Actions</th>
-    </tr>
-    {% for class in classes %}
-    <tr>
-        <td>{{ class.class_name }}</td>
-        <td>{{ class.section }}</td>
-        <td>{{ class.teacher.name }}</td>
-        <td>
-            {% for student in class.student.all %}
-                {{ student.name }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </td>
-        <td>
-            <a href="{% url 'class_update' class.pk %}">Edit</a> |
-            <a href="{% url 'class_delete' class.pk %}">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-    {% endif %}
-</table>
-    {% elif user.user_type == 'staff' %}
-    <h1>Staff Dashboard</h1>
-
+    <!-- Classes Table -->
     <div class="table-wrapper">
+        <h2>School Classes</h2>
+        <a href="{% url 'class_create' %}" class="btn btn-success">➕ Add New Class</a>
+        {% if classes %}
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Roll</th>
-                    <th>Address</th>
-                    <th>DOB</th>
-                    <th>Enroll Date</th>
-                    <th>Class</th>
+                    <th>Class Name</th>
+                    <th>Section</th>
+                    <th>Teacher</th>
+                    <th>Students</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for student in students %}
+                {% for class in classes %}
                 <tr>
-                    <td>{{ student.name }}</td>
-                    <td>{{ student.email }}</td>
-                    <td>{{ student.roll_number }}</td>
-                    <td>{{ student.address }}</td>
-                    <td>{{ student.dob }}</td>
-                    <td>{{ student.enrollment_date }}</td>
-                    <td>{{ student.class_name }}</td>
+                    <td>{{ class.class_name }}</td>
+                    <td>{{ class.section }}</td>
+                    <td>{{ class.teacher.name }}</td>
+                    <td>
+                        {% for student in class.student.all %}
+                        {{ student.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{% url 'class_update' class.pk %}" class="btn btn-primary">Edit</a>
+                        <a href="{% url 'class_delete' class.pk %}" class="btn btn-danger">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>No classes found.</p>
+        {% endif %}
     </div>
 
-    {% else %}
-    <p>No dashboard available.</p>
     {% endif %}
 
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Animate headings
+        const headings = document.querySelectorAll("h1, h2");
+        headings.forEach((h, i) => {
+            setTimeout(() => h.classList.add("show"), i * 150);
+        });
+
+        // Animate cards
+        const cards = document.querySelectorAll(".card");
+        cards.forEach((c, i) => {
+            setTimeout(() => c.classList.add("show"), i * 150);
+        });
+
+        // Animate tables
+        const tables = document.querySelectorAll(".table-wrapper");
+        tables.forEach((t, i) => {
+            setTimeout(() => t.classList.add("show"), i * 200 + 300);
+        });
+    });
+</script>
 {% endblock %}

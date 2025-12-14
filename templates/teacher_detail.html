@@ -246,7 +246,7 @@
             <div class="profile-info">
                 <h2>{{ teacher.name }}</h2>
                 <p><span class="info-label">Username:</span> {{ teacher.username }}</p>
-                <p><span class="info-label">Email:</span> <a href="mailto:{{ teacher.email }}" style="color: #0066cc;">{{ teacher.email }}</a></p>
+                <p><span class="info-label">Email:</span> {{ teacher.email }}</p>
                 <p><span class="info-label">Roll Number:</span> {{ teacher.roll_number|default:"N/A" }}</p>
                 <p><span class="info-label">Address:</span> {{ teacher.address }}</p>
                 <p><span class="info-label">Enrolled:</span> {{ teacher.enrollment_date|date:"d M, Y" }}</p>
@@ -260,15 +260,15 @@
             </div>
             <div class="detail-card">
                 <h3>🎓 Roll Number</h3>
-                <p>{{ teacher.roll_number|default:"Not Assigned" }}</p>
+                <p>{{ teacher.roll_number}}</p>
             </div>
             <div class="detail-card">
                 <h3>📍 Address</h3>
-                <p>{{ teacher.address|default:"Not Provided" }}</p>
+                <p>{{ teacher.address}}</p>
             </div>
             <div class="detail-card">
                 <h3>📅 Enrollment Date</h3>
-                <p>{{ teacher.enrollment_date|date:"d M, Y" }}</p>
+                <p>{{ teacher.enrollment_date}}</p>
             </div>
         </div>
     </div>

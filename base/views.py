@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 
 
 
+
 def home(request):
     context = {}
 
@@ -62,7 +63,6 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully!')
     return redirect('login') 
-
 def dashboard(request):
     user = request.user
 

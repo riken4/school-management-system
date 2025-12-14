@@ -1,18 +1,91 @@
-<h1>Student Class Details</h1>
+{% extends 'base.html' %}
+{% load static %}
 
-<p><strong>Name:</strong> {{ student.name }}</p>
-<p><strong>Username:</strong> {{ student.username }}</p>
+{% block extra_css %}
+<style>
+    body {
+        background: #f4f6f9;
+        font-family: 'Poppins', sans-serif;
+    }
 
-<h2>Your Class(es)</h2>
+    .details-wrapper {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        animation: fadeSlide 0.8s ease forwards;
+        opacity: 0;
+    }
 
-{% if classes %}
-    {% for class_item in classes %}
-        <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-            <p><strong>Class:</strong> {{ class_item.class_name }}</p>
-            <p><strong>Section:</strong> {{ class_item.section }}</p>
-            <p><strong>Teacher:</strong> {{ class_item.teacher.name }}</p>
-        </div>
-    {% endfor %}
-{% else %}
-    <p>You are not assigned to any class.</p>
-{% endif %}
+    @keyframes fadeSlide {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    .student-info, .class-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .class-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .student-info p, .class-card p {
+        font-size: 15px;
+        margin: 6px 0;
+    }
+
+    .no-class {
+        background: #ffecec;
+        color: #a30000;
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="details-wrapper">
+
+    <h1>Student Class Details</h1>
+
+    <div class="student-info">
+        <p><strong>Name:</strong> {{ student.name }}</p>
+        <p><strong>Username:</strong> {{ student.username }}</p>
+    </div>
+
+    <h2>Your Class</h2>
+
+    {% if classes %}
+        {% for class_item in classes %}
+            <div class="class-card">
+                <p><strong>Class:</strong> {{ class_item.class_name }}</p>
+                <p><strong>Section:</strong> {{ class_item.section }}</p>
+                <p><strong>Teacher:</strong> {{ class_item.teacher.name }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-class">You are not assigned to any class.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

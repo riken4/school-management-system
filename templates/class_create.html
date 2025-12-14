@@ -1,6 +1,150 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'class_list' %}">Back</a>
+{% block extra_css %}
+<style>
+    /* Body styling */
+    body {
+        background: #f5f7fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Container */
+    .container {
+        max-width: 500px;
+        margin: 60px auto;
+        padding: 0 15px;
+    }
+
+    /* Heading */
+    h2 {
+        font-weight: 700;
+        font-size: 28px;
+        text-align: center;
+        color: #333;
+        margin-bottom: 25px;
+        position: relative;
+        letter-spacing: 1px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.6s ease;
+    }
+
+    h2::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 3px;
+        background-color: #4e73df;
+        margin: 8px auto 0;
+        border-radius: 2px;
+    }
+
+    h2.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Form container */
+    .form-container {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 25px 30px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        opacity: 0;
+        transform: translateY(25px);
+        transition: all 0.7s ease;
+    }
+
+    .form-container.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Form fields animation */
+    .form-container p {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: 0.4s ease;
+    }
+
+    .form-container.show p {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Staggered delay for fields */
+    .form-container p:nth-child(1) { transition-delay: 0.2s; }
+    .form-container p:nth-child(2) { transition-delay: 0.35s; }
+    .form-container p:nth-child(3) { transition-delay: 0.5s; }
+    .form-container p:nth-child(4) { transition-delay: 0.65s; }
+    .form-container p:nth-child(5) { transition-delay: 0.8s; }
+
+    /* Buttons */
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        background-color: #4e73df;
+        color: #fff;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background-color: #3b5fd1;
+    }
+
+    /* Back link */
+    a {
+        display: inline-block;
+        margin-top: 15px;
+        color: #4e73df;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: #3b5fd1;
+    }
+
+    /* Hide default Django help texts */
+    .helptext {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Create Class</h2>
+    <div class="form-container">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+        <a href="{% url 'class_list' %}">Back</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Animate heading
+        const heading = document.querySelector("h2");
+        setTimeout(() => {
+            heading.classList.add("show");
+        }, 150);
+
+        // Animate form container and fields
+        const formBox = document.querySelector(".form-container");
+        setTimeout(() => {
+            formBox.classList.add("show");
+        }, 300);
+    });
+</script>
+{% endblock %}

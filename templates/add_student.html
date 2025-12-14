@@ -1,14 +1,98 @@
-<!-- templates/add_student.html -->
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 60px auto;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        transform: translateY(25px);
+        transition: all 0.7s ease;
+    }
+
+    .form-container.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+   h2 {
+    font-weight: 700;
+    font-size: 28px;
+    text-align: center;
+    color: #333333;
+
+    position: relative;
+    letter-spacing: 1px;
+}
+
+/* Optional: add a nice underline effect */
+
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    /* Form Field Animation */
+    .form-container p {
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: 0.4s ease;
+    }
+
+    .form-container.show p {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .form-container p:nth-child(1) { transition-delay: 0.2s; }
+    .form-container p:nth-child(2) { transition-delay: 0.35s; }
+    .form-container p:nth-child(3) { transition-delay: 0.5s; }
+    .form-container p:nth-child(4) { transition-delay: 0.65s; }
+    .form-container p:nth-child(5) { transition-delay: 0.8s; }
+    
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
+<div class="container">
     <h2>Add Student</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Add Student</button>
-    </form>
+    <div class="form-container" id="animatedForm">
+        
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Add Student</button>
+        </form>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Smooth fade + slide animation on page load
+    document.addEventListener("DOMContentLoaded", () => {
+        const formBox = document.getElementById("animatedForm");
+        setTimeout(() => {
+            formBox.classList.add("show");
+        }, 150);
+    });
+</script>
 {% endblock %}

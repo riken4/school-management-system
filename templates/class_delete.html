@@ -1,7 +1,122 @@
-<h1>Delete Class</h1>
-<p>Are you sure you want to delete "{{ class.class_name }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'class_list' %}">Cancel</a>
-</form>
+{% block extra_css %}
+<style>
+    body {
+        background: #f5f7fa;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 0 15px;
+        text-align: center;
+    }
+
+    /* Heading */
+    h1 {
+        font-weight: 700;
+        font-size: 30px;
+        color: #e74a3b; /* warning/red color */
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.6s ease;
+    }
+
+    h1.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Confirmation text */
+    p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 30px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.6s ease;
+    }
+
+    p.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Form container */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease;
+    }
+
+    form.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Buttons */
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        background-color: #e74a3b;
+        color: #fff;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        background-color: #c0392b;
+    }
+
+    /* Cancel link */
+    a {
+        color: #4e73df;
+        text-decoration: none;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    a:hover {
+        text-decoration: underline;
+        color: #3b5fd1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Delete Class</h1>
+    <p>Are you sure you want to delete "{{ class.class_name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+        <a href="{% url 'class_list' %}">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Animate heading
+        const heading = document.querySelector("h1");
+        setTimeout(() => heading.classList.add("show"), 100);
+
+        // Animate paragraph
+        const paragraph = document.querySelector("p");
+        setTimeout(() => paragraph.classList.add("show"), 250);
+
+        // Animate form
+        const form = document.querySelector("form");
+        setTimeout(() => form.classList.add("show"), 400);
+    });
+</script>
+{% endblock %}

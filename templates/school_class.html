@@ -1,83 +1,104 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Event Detail{% endblock %}
+{% block title %}Class Detail{% endblock %}
 
 {% block extra_css %}
 <style>
-    .class-table {
-        width: 80%;
-        margin: 30px auto;
-        border-collapse: collapse;
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        background: #ffffff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 6px;
-        overflow: hidden;
-    }
+.class-table {
+    width: 80%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
 
-    .class-table thead {
-        background: #4f46e5;
-        /* Indigo color */
-        color: white;
-    }
+.class-table thead {
+    background: #4f46e5; /* Indigo */
+    color: white;
+}
 
-    .class-table th,
-    .class-table td {
-        padding: 12px 18px;
-        text-align: left;
-        border-bottom: 1px solid #e5e7eb;
-    }
+.class-table th,
+.class-table td {
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
 
-    .class-table tbody tr:hover {
-        background: #f3f4f6;
-        /* Light hover */
-    }
+.class-table tbody tr:hover {
+    background: #f3f4f6;
+    transition: 0.3s;
+}
 
-    h2 {
-        text-align: center;
-        margin-top: 30px;
-        font-size: 26px;
-        color: #1f2937;
-    }
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    color: #1f2937;
+}
+
+/* Optional: make student list scrollable if too long */
+.student-list {
+    max-height: 100px;
+    overflow-y: auto;
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<h2>Class Details</h2>
+
 <table class="class-table">
     <thead>
         <tr>
             <th>Class</th>
             <th>Section</th>
             <th>Teacher</th>
-            <th>All students</th>
+            <th>All Students</th>
         </tr>
     </thead>
     <tbody>
- {% if user.is_student %}
-        <tr>
-            <td>{{ classes.class_name }}</td>
-            <td>{{ classes.section }}</td>
-            <td>{{ teacher.name }}</td>
-            {% for student in students %}
-            <td> {% for student in students %}
-                {{ student.name }},
-                {% endfor %}</td>
-            {% endfor %}
-        </tr>
-{% elif user.is_teacher %}
-
-            <!-- <tr>
-                <td colspan="3">No classes assigned to this teacher.</td>
-            </tr> -->
-
+        {% if user.is_student %}
+            <tr>
+                <td>{{ classes.class_name }}</td>
+                <td>{{ classes.section }}</td>
+                <td>{{ teacher.name }}</td>
+                <td class="student-list">
+                    {% for student in students %}
+                        {{ student.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% elif user.is_teacher %}
+            {% if teacher_classes %}
+                {% for cls in teacher_classes %}
+                <tr>
+                    <td>{{ cls.class_name }}</td>
+                    <td>{{ cls.section }}</td>
+                    <td>{{ user.name }}</td>
+                    <td class="student-list">
+                        {% for student in cls.student.all %}
+                            {{ student.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No classes assigned to you yet.</td>
+                </tr>
+            {% endif %}
+        {% endif %}
     </tbody>
 </table>
-
-
 {% endblock %}
 
 {% block extra_js %}
-<script></script>
+<script>
+// You can add JS if you want animations or sorting in the future
+</script>
 {% endblock %}
